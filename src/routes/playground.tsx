@@ -1,11 +1,10 @@
 /**
  * 文匠 Playground — JSON DSL → PDF 实时调试台
  */
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { safeGeneratePdf } from "@/lib/pdf/api";
+import { safeGeneratePdf, type GenerateResult } from "@/lib/pdf/api";
 import { PRESETS } from "@/lib/presets";
-import { THEME_NAMES, type ThemeName } from "@/lib/pdf/dsl";
 import { Btn, Panel, Tag } from "@/components/site/kit";
 
 export const Route = createFileRoute("/playground")({
@@ -18,14 +17,14 @@ function PlaygroundPage() {
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
-  const previewUrl = useRef<string | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   const loadPreset = (id: string) => {
     const p = PRESETS.find((x) => x.id === id);
     if (!p) return;
     setPresetId(id);
     setSpecText(JSON.stringify(p.spec, null, 2));
-    setDirty(false);
+    setDirty(true);
   };
 
   const render = useCallback(async () => {
@@ -42,13 +41,18 @@ function PlaygroundPage() {
     }
   }, [specText]);
 
-  // 生成预览 URL（blob）
-  const pdfUrl = result?.ok
-    ? URL.createObjectURL(base64ToBlob(result.base64))
-    : null;
-
-  if (pdfUrl && previewUrl.current) URL.revokeObjectURL(previewUrl.current);
-  if (pdfUrl) previewUrl.current = pdfUrl;
+  // 每次渲染结果变化才建一次 blob URL，并在下一次结果变化/卸载时回收。
+  // 不能在 render 体内建 URL：并发渲染时后到的渲染结果会让先到的 blob URL 提前失效，
+  // iframe 挂在一个已被 revoke 的 URL 上，浏览器就留在上一次的 PDF 画面。
+  useEffect(() => {
+    if (!result?.ok) {
+      setPdfUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(base64ToBlob(result.base64));
+    setPdfUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [result]);
 
   return (
     <div>
