@@ -16,14 +16,12 @@ import type { DocSpec } from "./dsl";
 let cachedFonts: ReturnType<typeof buildFontSet> | null = null;
 
 function buildFontSet() {
-  const notoDir = "/usr/share/fonts/opentype/noto";
-  const dejavu = "/usr/share/fonts/truetype/dejavu";
+  // 字体随项目打包（fonts/ 目录），不依赖宿主机已装字体。
+  // ponytail: 假设进程从项目根目录启动；若 systemd 改了 WorkingDirectory，改用 FONTS_DIR 环境变量。
+  const fontsDir = process.env.FONTS_DIR ?? join(process.cwd(), "fonts");
   return {
-    sans: readFileSync(join(notoDir, "NotoSansCJK-Regular.ttc")),
-    sansBold: readFileSync(join(notoDir, "NotoSansCJK-Bold.ttc")),
-    serif: readFileSync(join(dejavu, "DejaVuSerif.ttf")),
-    serifBold: readFileSync(join(dejavu, "DejaVuSerif-Bold.ttf")),
-    mono: readFileSync(join(dejavu, "DejaVuSansMono.ttf")),
+    sans: readFileSync(join(fontsDir, "NotoSansSC-Regular.otf")),
+    sansBold: readFileSync(join(fontsDir, "NotoSansSC-Bold.otf")),
   };
 }
 
@@ -32,20 +30,13 @@ export function loadPdfFonts() {
   return cachedFonts;
 }
 
-export const PDF_FONT_FAMILIES = [
-  "Noto Sans CJK SC",
-  "DejaVu Serif",
-  "DejaVu Sans Mono",
-];
+export const PDF_FONT_FAMILIES = ["Noto Sans SC"];
 
 function fontLoaders() {
   const f = loadPdfFonts();
   return [
-    { name: "Noto Sans CJK SC", data: f.sans },
-    { name: "Noto Sans CJK SC Bold", data: f.sansBold },
-    { name: "DejaVu Serif", data: f.serif },
-    { name: "DejaVu Serif Bold", data: f.serifBold },
-    { name: "DejaVu Sans Mono", data: f.mono },
+    { name: "Noto Sans SC", data: f.sans },
+    { name: "Noto Sans SC Bold", data: f.sansBold },
   ];
 }
 
@@ -116,7 +107,7 @@ export async function renderDocSpec(spec: DocSpec): Promise<RenderResult> {
     fontFamilies: PDF_FONT_FAMILIES,
     images,
     lang: spec.metadata?.lang ?? "zh-CN",
-    css: `* { font-family: "Noto Sans CJK SC", "DejaVu Serif", "DejaVu Sans Mono", sans-serif; }`,
+    css: `* { font-family: "Noto Sans SC", sans-serif; }`,
   };
 
   const options = spec.viewport
