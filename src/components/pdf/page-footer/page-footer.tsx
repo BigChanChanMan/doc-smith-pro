@@ -23,8 +23,8 @@ export type PageFooterVariant =
   | "detailed";
 
 /**
- * Footer row with layout variants, optional sticky or fixed positioning, and contact info support.
- * Props - `leftText` | `rightText` | `centerText` | `variant` | `background` | `textColor` | `marginTop` | `address` | `phone` | `email` | `website` | `fixed` | `sticky` | `pagePadding` | `noWrap` | `style`
+ * Footer row with layout variants, optional sticky positioning, and contact info support.
+ * Props - `leftText` | `rightText` | `centerText` | `variant` | `background` | `textColor` | `marginTop` | `address` | `phone` | `email` | `website` | `sticky` | `pagePadding` | `noWrap` | `style`
  * @see {@link PageFooterProps}
  */
 export interface PageFooterProps extends Omit<PDFComponentProps, "children"> {
@@ -42,10 +42,6 @@ export interface PageFooterProps extends Omit<PDFComponentProps, "children"> {
   phone?: string;
   email?: string;
   website?: string;
-  /**
-   * @default false
-   */
-  fixed?: boolean;
   /**
    * @default false
    */
@@ -235,7 +231,6 @@ const applyTextColor = (
 };
 
 const renderBranded = (
-  styles: Styles,
   containerStyles: Style[],
   leftStyle: Style[],
   rightStyle: Style[],
@@ -250,7 +245,6 @@ const renderBranded = (
 );
 
 const renderCentered = (
-  styles: Styles,
   containerStyles: Style[],
   textStyle: Style[],
   leftText: ReactNode,
@@ -325,7 +319,6 @@ const renderDetailed = (
 );
 
 const renderMinimal = (
-  styles: Styles,
   containerStyles: Style[],
   leftStyle: Style[],
   rightStyle: Style[],
@@ -340,7 +333,6 @@ const renderMinimal = (
 );
 
 const renderSimple = (
-  styles: Styles,
   containerStyles: Style[],
   leftStyle: Style[],
   centerStyle: Style[],
@@ -369,7 +361,6 @@ export const PageFooter = ({
   phone,
   email,
   website,
-  fixed = false,
   sticky = false,
   pagePadding = 0,
   noWrap = true,
@@ -377,7 +368,6 @@ export const PageFooter = ({
 }: PageFooterProps) => {
   const theme = usePdfcnTheme();
   const styles = useSafeMemo(() => createPageFooterStyles(theme), [theme]);
-  const _isFixed = fixed || sticky;
   const mt = sticky ? 0 : (marginTop ?? theme.spacing.sectionGap);
   const resolvedTextColor = textColor
     ? resolveColor(textColor, theme.colors)
@@ -407,7 +397,6 @@ export const PageFooter = ({
   const variantRenderers: Record<PageFooterVariant, () => React.ReactNode> = {
     branded: () =>
       renderBranded(
-        styles,
         applyOverrides([styles.brandedContainer, { marginTop: mt }]),
         applyTextColor([styles.textBranded], resolvedTextColor),
         applyTextColor([styles.textBrandedRight], resolvedTextColor),
@@ -417,7 +406,6 @@ export const PageFooter = ({
       ),
     centered: () =>
       renderCentered(
-        styles,
         applyOverrides([styles.centeredContainer, { marginTop: mt }]),
         applyTextColor([styles.textCenteredVariant], resolvedTextColor),
         leftText,
@@ -442,7 +430,6 @@ export const PageFooter = ({
       ),
     minimal: () =>
       renderMinimal(
-        styles,
         applyOverrides([styles.minimalContainer, { marginTop: mt }]),
         applyTextColor([styles.textLeft], resolvedTextColor),
         applyTextColor([styles.textRight], resolvedTextColor),
@@ -452,7 +439,6 @@ export const PageFooter = ({
       ),
     simple: () =>
       renderSimple(
-        styles,
         applyOverrides([styles.simpleContainer, { marginTop: mt }]),
         applyTextColor([styles.textLeft], resolvedTextColor),
         applyTextColor([styles.textCenter], resolvedTextColor),

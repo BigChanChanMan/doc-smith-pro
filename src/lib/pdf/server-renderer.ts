@@ -132,8 +132,6 @@ export async function renderDocSpec(spec: DocSpec): Promise<RenderResult> {
 
 /** 预热：进程启动后首次调用会加载 WASM + 字体，之后毫秒级 */
 export async function warmup() {
-  const { Text } = await import("@/components/pdf/text/text");
-  const { PdfcnThemeProvider } = await import("@/components/pdf/theme-provider");
   await renderDocSpec({
     theme: "professional",
     metadata: { title: "warmup" },

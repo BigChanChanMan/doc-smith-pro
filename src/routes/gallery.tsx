@@ -4,7 +4,7 @@
  */
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { safeGeneratePdf, type GenerateResult } from "@/lib/pdf/api";
+import { safeGeneratePdf } from "@/lib/pdf/api";
 import { Panel, Tag } from "@/components/site/kit";
 import { SiteFrame } from "@/components/site/SiteFrame";
 import type { Node } from "@/lib/pdf/dsl";

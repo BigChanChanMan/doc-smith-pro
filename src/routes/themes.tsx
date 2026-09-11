@@ -3,7 +3,7 @@
  */
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { safeGeneratePdf, type GenerateResult } from "@/lib/pdf/api";
+import { safeGeneratePdf } from "@/lib/pdf/api";
 import { THEME_NAMES, type ThemeName } from "@/lib/pdf/dsl";
 import { THEME_LIST } from "@/lib/pdf/theme-map";
 import { Panel, Tag } from "@/components/site/kit";

@@ -279,36 +279,6 @@ export interface DocSpec {
 
 /* ═════════════════ zod 运行时校验（浅校验） ═════════════════ */
 
-const Kids = z.array(z.unknown()).optional();
-
-const nodeSchemas = [
-  z.object({ type: z.literal("text"), text: z.string().optional() }).passthrough(),
-  z.object({ type: z.literal("heading"), text: z.string() }).passthrough(),
-  z.object({ type: z.literal("link"), text: z.string(), href: z.string() }).passthrough(),
-  z.object({ type: z.literal("alert"), text: z.string() }).passthrough(),
-  z.object({ type: z.literal("badge"), label: z.string() }).passthrough(),
-  z.object({ type: z.literal("divider") }).passthrough(),
-  z.object({ type: z.literal("page-break") }).passthrough(),
-  z.object({ type: z.literal("stack"), children: Kids }).passthrough(),
-  z.object({ type: z.literal("section"), children: Kids }).passthrough(),
-  z.object({ type: z.literal("card"), children: Kids }).passthrough(),
-  z.object({ type: z.literal("keep-together"), children: Kids }).passthrough(),
-  z.object({ type: z.literal("key-value"), items: z.array(z.object({ label: z.string(), value: z.string() }).passthrough()) }).passthrough(),
-] as const;
-
-const nodeSchemas2 = [
-  z.object({ type: z.literal("data-table"), columns: z.array(z.object({ key: z.string(), header: z.string() }).passthrough()) }).passthrough(),
-  z.object({ type: z.literal("list"), items: z.array(z.object({ text: z.string() }).passthrough()) }).passthrough(),
-  z.object({ type: z.literal("form"), groups: z.array(z.object({ fields: z.array(z.object({ label: z.string() }).passthrough()) }).passthrough()) }).passthrough(),
-  z.object({ type: z.literal("graph"), data: z.array(z.object({ label: z.string(), value: z.number() }).passthrough()).or(z.array(z.object({ name: z.string(), data: z.array(z.object({ label: z.string(), value: z.number() }).passthrough()) }).passthrough())) }).passthrough(),
-  z.object({ type: z.literal("image"), src: z.string() }).passthrough(),
-  z.object({ type: z.literal("qrcode"), value: z.string() }).passthrough(),
-  z.object({ type: z.literal("signature") }).passthrough(),
-  z.object({ type: z.literal("watermark"), text: z.string() }).passthrough(),
-] as const;
-
-const NodeSchema = z.discriminatedUnion("type", [...nodeSchemas, ...nodeSchemas2]);
-
 export const DocSpecSchema = z.object({
   page: z
     .object({

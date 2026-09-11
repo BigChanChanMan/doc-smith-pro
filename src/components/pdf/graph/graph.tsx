@@ -798,7 +798,6 @@ const renderGraphContent = (
   height: number,
   legend: string,
   showLegend: boolean,
-  isPieOrDonut: boolean,
   series: GraphSeries[],
   palette: string[],
   styles: ReturnType<typeof createGraphStyles>
@@ -979,7 +978,6 @@ export const PdfGraph = ({
         height,
         legend,
         showLegend,
-        isPieOrDonut,
         series,
         palette,
         styles
