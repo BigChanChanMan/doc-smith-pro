@@ -9,7 +9,9 @@
     "dev": "vite dev --port 3000",
     "generate-routes": "tsr generate",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node scripts/prod-server.mjs",
+    "start:win": "node scripts/prod-server.win.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

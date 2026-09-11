@@ -1,0 +1,25 @@
+# 构建上下文里不需要的东西 —— 尤其 node_modules(182M) 和 dist，
+# 否则 COPY . . 会把宿主机的依赖（含 Windows 原生二进制）盖进镜像。
+node_modules
+dist
+dist-ssr
+.output
+.nitro
+.tanstack
+.vinxi
+.wrangler
+
+.git
+.gitignore
+.claude
+.idea
+.vscode
+.env
+*.local
+
+# 文档与仓库元信息不参与构建
+docs
+*.md
+.cta.json
+
+# 注意：fonts/ 与 scripts/ 是运行时必需的，绝不能忽略

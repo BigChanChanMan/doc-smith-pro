@@ -23,12 +23,23 @@
 
 - [docs/项目架构.md](docs/项目架构.md) — 技术栈 / 渲染管线 / 目录结构 / 踩坑记录
 - [docs/组件手册.md](docs/组件手册.md) — 20 种 DSL 节点与 pdfcn 组件对照
+- [docs/打包与部署.md](docs/打包与部署.md) — 构建产物 / 运行时依赖 / 生产启动 / Docker
 
 ## 运行
 
 ```bash
-NODE_ENV=development npm i --include=dev
-npx vite dev --port 3000     # 开发
-npx vite build               # 构建
-PORT=5177 node scripts/prod-server.mjs   # 生产
+npm ci                       # 安装依赖
+npm run dev                  # 开发，http://localhost:3000
+npm run build                # 构建 → dist/client + dist/server
+npm start                    # 生产（Linux/macOS）
+npm run start:win            # 生产（Windows）
 ```
+
+Docker：
+
+```bash
+docker build -t docsmith:latest .
+docker run -d -p 3000:3000 docsmith:latest
+```
+
+> 运行时必须有 `node_modules`（PDF 引擎是 `node_modules/takumi-pdf/pkg/*.wasm`）和 `fonts/` 目录，详见 [docs/打包与部署.md](docs/打包与部署.md)。
