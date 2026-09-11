@@ -29,8 +29,7 @@ import { PdfSignatureBlock } from "@/components/pdf/signature/signature";
 import { PdfWatermark } from "@/components/pdf/watermark/watermark";
 import { PageHeader } from "@/components/pdf/page-header/page-header";
 import { PageFooter } from "@/components/pdf/page-footer/page-footer";
-import { PageNumber } from "@/components/pdf/page-number/page-number";
-import { TotalPages } from "takumi-pdf/primitives";
+import { PageNumber as PageNumberPrimitive, TotalPages } from "takumi-pdf/primitives";
 import { Document, Page, View } from "@/lib/pdf/pdf-primitives";
 
 /* ─────────────────── 节点 → pdfcn 组件 ─────────────────── */
@@ -268,7 +267,7 @@ function footerElement(f: NonNullable<DocSpec["footer"]>): ReactNode {
   const pageNum = f.pageNumbers ? (
     <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
       <Text variant="xs" noMargin color="mutedForeground">
-        第 <PageNumber format={format} /> 页 / 共 <TotalPages format={format} /> 页
+        第 <PageNumberPrimitive format={format} /> 页 / 共 <TotalPages format={format} /> 页
       </Text>
     </View>
   ) : null;
